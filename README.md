@@ -37,4 +37,4 @@ export PREVIDER_TOKEN="insert-token"
 Will print the current version of the client
 
 ## Output
-The default output format is `json`. Lists of environments, tokens and secrets can also be pretty-printed with the `-o pretty` parameter.
+The default output format is `json`. To have nicer output, like tables for lists, use the `-o pretty` parameter.
