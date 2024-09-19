@@ -2,8 +2,6 @@ module github.com/previder/previder-cli
 
 go 1.23.1
 
-replace github.com/previder/previder-go-sdk => /home/gijsm/git/previder-go-sdk
-
 require (
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
