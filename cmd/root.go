@@ -58,7 +58,7 @@ func Execute() {
 
 func printJson(input any) {
 	marshal, _ := json.MarshalIndent(input, "", "  ")
-	println(string(marshal))
+	fmt.Println(string(marshal))
 }
 
 func printTable(headers []string, content []interface{}) {

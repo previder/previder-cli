@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/pkg/browser"
+	"github.com/previder/previder-cli/internal"
 	"github.com/previder/previder-go-sdk/client"
 	"github.com/spf13/cobra"
 	"log"
@@ -73,9 +74,9 @@ func init() {
 	cmdCreate.Flags().String("group", "", "Group")
 	cmdCreate.Flags().StringArray("tag", []string{}, "Tag")
 	cmdCreate.Flags().String("compute-cluster", "express", "Compute cluster")
-	cmdCreate.Flags().StringArray("disk", []string{}, "Disk size in MB (multiple arguments allowed)")
+	cmdCreate.Flags().StringArray("disk", []string{}, "Disk size in MB or human readable format like 2G (multiple arguments allowed)")
 	cmdCreate.MarkFlagRequired("disk")
-	cmdCreate.Flags().StringArray("network-interface", []string{}, "Network interface Network:[Connected] (multiple arguments allowed)")
+	cmdCreate.Flags().StringArray("network-interface", []string{}, "Network interface Network:[connected] (multiple arguments allowed)")
 	cmdCreate.MarkFlagRequired("network-interface")
 	cmdCreate.Flags().Bool("termination-protection", false, "Termination protection")
 	cmdCreate.Flags().String("template", "", "Template")
@@ -183,9 +184,10 @@ func createVirtualServer(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	for _, disk := range disks {
-		size, err := FromHumanReadable(disk)
+
+		size, err := internal.FromHumanReadable(disk)
 		if err != nil {
-			return nil
+			return err
 		}
 		vm.Disks = append(vm.Disks, client.Disk{
 			//	Id:   &id,
@@ -243,9 +245,20 @@ func createVirtualServer(cmd *cobra.Command, args []string) error {
 }
 
 func deleteVirtualServer(cmd *cobra.Command, args []string) error {
-	_, err := previderClient.VirtualServer.Delete(args[0])
+	task, err := previderClient.VirtualServer.Delete(args[0])
 	if err != nil {
 		return err
+	}
+
+	finishedTask, err := previderClient.Task.WaitFor(task.Id, client.DefaultTimeout)
+	if err != nil {
+		return err
+	}
+
+	if outputType == "pretty" {
+		fmt.Printf("%+v\n", finishedTask)
+	} else {
+		printJson(finishedTask)
 	}
 
 	return nil

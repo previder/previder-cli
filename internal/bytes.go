@@ -1,4 +1,4 @@
-package cmd
+package internal
 
 import (
 	"errors"
@@ -52,7 +52,11 @@ func FromHumanReadable(s string) (uint64, error) {
 	i := strings.IndexFunc(s, unicode.IsLetter)
 
 	if i == -1 {
-		return 0, invalidByteQuantityError
+		output, err := strconv.ParseFloat(s, 64)
+		if err != nil {
+			return 0, err
+		}
+		return uint64(output * MEGABYTE), nil
 	}
 
 	bytesString, multiple := s[:i], s[i:]
