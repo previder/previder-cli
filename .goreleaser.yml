@@ -34,7 +34,7 @@ builds:
       - goarch: '386'
     binary: 'previder-cli'
 archives:
-  - format: zip
+  - format: [ 'zip' ]
     name_template: 'previder-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
 checksum:
   name_template: 'previder-cli_{{ .Version }}_SHA256SUMS'
