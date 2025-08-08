@@ -141,7 +141,7 @@ func createVirtualServer(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	vm.CpuCores, err = cmd.Flags().GetInt("cpuCores")
+	vm.CpuCores, err = cmd.Flags().GetInt("cpu-cores")
 	if err != nil {
 		return err
 	}
